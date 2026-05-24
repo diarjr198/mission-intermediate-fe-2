@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import avatar from "../../assets/images/avatar/avatar-profile.png";
 
-export default function HomeNavbar() {
+export default function HomeNavbar({ onCategoryClick, showFilterMode }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -24,6 +24,16 @@ export default function HomeNavbar() {
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    const handleMobileCategoryClick = () => {
+        onCategoryClick();
+        setMenuOpen(false);
+    };
+
+    const handleMobileLogout = () => {
+        navigate("/");
+        setMenuOpen(false);
+    };
+
     return (
         <nav className="relative z-50 border-b border-brand-border bg-white">
             <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8">
@@ -40,12 +50,16 @@ export default function HomeNavbar() {
 
                 {/* Desktop menu */}
                 <div className="hidden items-center gap-9 md:flex">
-                    <a
-                        href="#"
-                        className="text-base font-medium text-slate-600 transition hover:text-brand-primary"
+                    <button
+                        onClick={onCategoryClick}
+                        className={`text-base font-medium transition ${
+                            showFilterMode
+                                ? "text-brand-primary"
+                                : "text-slate-600 hover:text-brand-primary"
+                        }`}
                     >
                         Kategori
-                    </a>
+                    </button>
 
                     {/* Avatar + Dropdown */}
                     <div className="relative flex items-center" ref={dropdownRef}>
@@ -116,14 +130,19 @@ export default function HomeNavbar() {
             {/* Mobile dropdown */}
             {menuOpen && (
                 <div className="border-t border-brand-border bg-white px-5 py-4 md:hidden">
-                    <a
-                        href="#"
-                        className="block py-2 text-base font-medium text-slate-600 hover:text-brand-primary"
+                    <button
+                        onClick={handleMobileCategoryClick}
+                        className={`block w-full text-left py-2 text-base font-medium ${
+                            showFilterMode
+                                ? "text-brand-primary"
+                                : "text-slate-600 hover:text-brand-primary"
+                        }`}
                     >
                         Kategori
-                    </a>
+                    </button>
+
                     <button
-                        onClick={() => navigate("/")}
+                        onClick={handleMobileLogout}
                         className="block py-2 text-base font-medium text-red-500 hover:text-red-600"
                     >
                         Keluar
