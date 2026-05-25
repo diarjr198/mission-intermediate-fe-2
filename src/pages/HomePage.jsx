@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import HomeNavbar from "../components/layout/HomeNavbar";
 import Footer from "../components/layout/Footer";
 import CourseCard from "../components/ui/CourseCard";
 import { courses, categories } from "../assets/data/courses";
+import useCoursesStore from "../hooks/useCoursesStore";
 import bannerHero from "../assets/images/banner/banner-1.jpg";
 import bannerCta from "../assets/images/banner/banner-cta.jpg";
 import FilterPanel from "../components/home/FilterPanel";
@@ -11,8 +13,10 @@ import CoursePagination from "../components/home/CoursePagination";
 import useCourseFilterState from "../hooks/useCourseFilterState";
 
 export default function HomePage() {
+    const location = useLocation();
     const [activeCategory, setActiveCategory] = useState("Semua Kelas");
     const [showFilterMode, setShowFilterMode] = useState(false);
+    const { courseItems } = useCoursesStore();
 
     const [bidangStudiOpen, setBidangStudiOpen] = useState(true);
     const [hargaOpen, setHargaOpen] = useState(true);
@@ -38,7 +42,7 @@ export default function HomePage() {
         toggleCategory,
         togglePrice,
         toggleDuration,
-    } = useCourseFilterState(courses);
+    } = useCourseFilterState(courseItems);
 
     useEffect(() => {
         const isMobile = window.innerWidth < 1024;
@@ -46,6 +50,12 @@ export default function HomePage() {
         setHargaOpen(!isMobile);
         setDurasiOpen(!isMobile);
     }, [showFilterMode]);
+
+    useEffect(() => {
+        if (location.state?.openFilterMode) {
+            setShowFilterMode(true);
+        }
+    }, [location.state]);
 
     useEffect(() => {
         if (!hasPageChangedRef.current) return;
@@ -73,8 +83,8 @@ export default function HomePage() {
 
     const nonFilterModeCourses =
         activeCategory === "Semua Kelas"
-            ? courses
-            : courses.filter((c) => c.category === activeCategory);
+            ? courseItems
+            : courseItems.filter((c) => c.category === activeCategory);
 
     return (
         <div className="bg-brand-cream font-sans text-brand-dark min-h-screen">

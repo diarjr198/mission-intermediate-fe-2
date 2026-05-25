@@ -41,7 +41,7 @@ export default function CourseCard({ course }) {
                 />
 
                 {/* Content */}
-                <div className="min-w-0 flex-1 space-y-2">
+                <div className="min-w-0 flex flex-1 flex-col justify-between sm:space-y-2">
                     <h3 className="line-clamp-2 text-sm font-semibold leading-tight sm:text-lg">
                         {title}
                     </h3>

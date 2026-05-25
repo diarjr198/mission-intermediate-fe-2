@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import avatar from "../../assets/images/avatar/avatar-profile.png";
 
@@ -8,6 +8,16 @@ export default function HomeNavbar({ onCategoryClick, showFilterMode }) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleCategoryNav = () => {
+        if (location.pathname === "/home") {
+            onCategoryClick();
+            return;
+        }
+
+        navigate("/home", { state: { openFilterMode: true } });
+    };
 
     // Tutup dropdown ketika klik di luar
     useEffect(() => {
@@ -25,7 +35,7 @@ export default function HomeNavbar({ onCategoryClick, showFilterMode }) {
     }, []);
 
     const handleMobileCategoryClick = () => {
-        onCategoryClick();
+        handleCategoryNav();
         setMenuOpen(false);
     };
 
@@ -51,7 +61,7 @@ export default function HomeNavbar({ onCategoryClick, showFilterMode }) {
                 {/* Desktop menu */}
                 <div className="hidden items-center gap-9 md:flex">
                     <button
-                        onClick={onCategoryClick}
+                        onClick={handleCategoryNav}
                         className={`text-base font-medium transition ${
                             showFilterMode
                                 ? "text-brand-primary"
@@ -60,6 +70,9 @@ export default function HomeNavbar({ onCategoryClick, showFilterMode }) {
                     >
                         Kategori
                     </button>
+                    <Link to="/crud" className="text-base font-medium text-slate-600 transition hover:text-brand-primary">
+                        CRUD
+                    </Link>
 
                     {/* Avatar + Dropdown */}
                     <div className="relative flex items-center" ref={dropdownRef}>
@@ -140,6 +153,10 @@ export default function HomeNavbar({ onCategoryClick, showFilterMode }) {
                     >
                         Kategori
                     </button>
+
+                    <Link to="/crud" onClick={() => setMenuOpen(false)} className="block py-2 text-base font-medium text-slate-600 hover:text-brand-primary">
+                        CRUD
+                    </Link>
 
                     <button
                         onClick={handleMobileLogout}
